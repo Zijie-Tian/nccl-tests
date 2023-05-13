@@ -27,10 +27,38 @@ export RESULT_FOLDER=../results/nsys
 
 mkdir -p ${RESULT_FOLDER}
 
-# all_reduce_perf 8 GPU 
-NCCL_ALGO=Ring nsys profile --wait primary --force-overwrite true -o ${RESULT_FOLDER}/ring_nsys \
-    ../build/all_reduce_perf -g 8 > ./${RESULT_FOLDER}/ring_allreduce_8_GPU.txt
+# # all_reduce_perf 8 GPU 
+# NCCL_ALGO=Ring nsys profile --wait primary --force-overwrite true -o ${RESULT_FOLDER}/ring_nsys \
+#     ../build/all_reduce_perf -g 8 > ./${RESULT_FOLDER}/ring_allreduce_8_GPU.txt
+
+# # all_reduce_perf 8 GPU 
+# NCCL_ALGO=Tree nsys profile --wait primary --force-overwrite true -o ${RESULT_FOLDER}/tree_nsys \
+#     ../build/all_reduce_perf -g 8 > ./${RESULT_FOLDER}/tree_allreduce_8_GPU.txt
 
 # all_reduce_perf 8 GPU 
-NCCL_ALGO=Tree nsys profile --wait primary --force-overwrite true -o ${RESULT_FOLDER}/tree_nsys \
-    ../build/all_reduce_perf -g 8 > ./${RESULT_FOLDER}/tree_allreduce_8_GPU.txt
+NCCL_ALGO=Ring nsys profile --wait primary --force-overwrite true -o ${RESULT_FOLDER}/ring_fact_8_nsys \
+    mpirun.openmpi -np 8 ../build/all_reduce_perf -g 1 -b 1M -e 16M -f 2 > ./${RESULT_FOLDER}/ring_allreduce_fact_8_GPU.txt
+
+# all_reduce_perf 8 GPU 
+NCCL_ALGO=Tree nsys profile --wait primary --force-overwrite true -o ${RESULT_FOLDER}/tree_fact_8_nsys \
+    mpirun.openmpi -np 8 ../build/all_reduce_perf -g 1 -b 1M -e 16M -f 2 > ./${RESULT_FOLDER}/tree_allreduce_fact_8_GPU.txt
+
+# all_reduce_perf 4 GPU 
+NCCL_ALGO=Ring nsys profile --wait primary --force-overwrite true -o ${RESULT_FOLDER}/ring_fact_4_nsys \
+    mpirun.openmpi -np 4 ../build/all_reduce_perf -g 1 -b 1M -e 16M -f 2 > ./${RESULT_FOLDER}/ring_allreduce_fact_4_GPU.txt
+
+# all_reduce_perf 4 GPU 
+NCCL_ALGO=Tree nsys profile --wait primary --force-overwrite true -o ${RESULT_FOLDER}/tree_fact_4_nsys \
+    mpirun.openmpi -np 4 ../build/all_reduce_perf -g 1 -b 1M -e 16M -f 2 > ./${RESULT_FOLDER}/tree_allreduce_fact_4_GPU.txt
+
+# all_reduce_perf 2 GPU 
+NCCL_ALGO=Ring nsys profile --wait primary --force-overwrite true -o ${RESULT_FOLDER}/ring_fact_2_nsys \
+    mpirun.openmpi -np 2 ../build/all_reduce_perf -g 1 -b 1M -e 16M -f 2 > ./${RESULT_FOLDER}/ring_allreduce_fact_2_GPU.txt
+
+# all_reduce_perf 2 GPU 
+NCCL_ALGO=Tree nsys profile --wait primary --force-overwrite true -o ${RESULT_FOLDER}/tree_fact_2_nsys \
+    mpirun.openmpi -np 2 ../build/all_reduce_perf -g 1 -b 1M -e 16M -f 2 > ./${RESULT_FOLDER}/tree_allreduce_fact_2_GPU.txt
+
+
+
+

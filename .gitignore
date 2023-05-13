@@ -5,3 +5,8 @@
 
 # results
 results/
+test/
+
+# VSCode
+.vscode/
+

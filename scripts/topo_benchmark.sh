@@ -23,26 +23,30 @@
 #         [-a,--average <0/1/2/3> report average iteration time <0=RANK0/1=AVG/2=MIN/3=MAX>]
 #         [-h,--help]
 
-export NCCL_ALGO=RING
+export NCCL_ALGO=Ring
+export DEBUG_LEVEL=DEBUG
 export RESULT_FOLDER=../results/topo
 
 mkdir -p ${RESULT_FOLDER}
 
-# all_reduce_perf 2 GPU within same switch
-CUDA_VISBLE_DEVICE=0,1 ../build/all_reduce_perf -g 2 > ./${RESULT_FOLDER}/allreduce_2_GPU.txt
+# # all_reduce_perf 2 GPU within same switch
+CUDA_VISIBLE_DEVICES=0,1 NCCL_DEBUG=${DEBUG_LEVEL} NCCL_DEBUG_SUBSYS=GRAPH NCCL_ALGO=Ring \
+    mpirun.openmpi -np 2 ../build/all_reduce_perf -b 8 -e 128M -f 2 -g 1 > ./${RESULT_FOLDER}/allreduce_2_GPU.txt
 
-# all_reduce_perf 2 GPU within same switch
-CUDA_VISBLE_DEVICE=0,4 ../build/all_reduce_perf -g 2 > ./${RESULT_FOLDER}/allreduce_1+1_GPU.txt
+# # all_reduce_perf 2 GPU within same switch
+CUDA_VISIBLE_DEVICES=0,4 NCCL_DEBUG=${DEBUG_LEVEL} NCCL_DEBUG_SUBSYS=GRAPH NCCL_ALGO=Ring \
+    mpirun.openmpi -np 2 ../build/all_reduce_perf -b 8 -e 128M -f 2 -g 1 > ./${RESULT_FOLDER}/allreduce_1+1_GPU.txt
+
+# # all_reduce_perf 4 GPU 
+CUDA_VISIBLE_DEVICES=0,1,2,3 NCCL_DEBUG=${DEBUG_LEVEL} NCCL_DEBUG_SUBSYS=GRAPH NCCL_ALGO=Ring \
+    mpirun.openmpi -np 4 ../build/all_reduce_perf -b 8 -e 128M -f 2 -g 1 > ./${RESULT_FOLDER}/allreduce_4_GPU.txt
 
 # all_reduce_perf 4 GPU 
-CUDA_VISBLE_DEVICE=0,1,2,3 ../build/all_reduce_perf -g 4 > ./${RESULT_FOLDER}/allreduce_4_GPU.txt
-
-# all_reduce_perf 4 GPU 
-CUDA_VISBLE_DEVICE=0,1,4,5 ../build/all_reduce_perf -g 4 > ./${RESULT_FOLDER}/allreduce_2+2_GPU.txt
+CUDA_VISIBLE_DEVICES=0,1,4,5 NCCL_DEBUG=${DEBUG_LEVEL} NCCL_DEBUG_SUBSYS=GRAPH NCCL_TOPO_DUMP_FILE=${RESULT_FOLDER}/4_GPU_xtopo.xml NCCL_ALGO=Ring \
+    mpirun.openmpi -np 4 ../build/all_reduce_perf -b 8 -e 128M -f 2 -g 1 > ./${RESULT_FOLDER}/allreduce_2+2_GPU.txt
 
 # all_reduce_perf 8 GPU 
-../build/all_reduce_perf -g 8 > ./${RESULT_FOLDER}/allreduce_8_GPU.txt
-
-
+CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 NCCL_DEBUG=${DEBUG_LEVEL} NCCL_DEBUG_SUBSYS=GRAPH NCCL_ALGO=Ring \
+    mpirun.openmpi -np 8 ../build/all_reduce_perf -b 8 -e 128M -f 2 -g 1 > ./${RESULT_FOLDER}/allreduce_8_GPU.txt
 
 
